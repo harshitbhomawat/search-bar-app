@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Ads = require('../models/ads');
 const Company = require('../models/company');
+const url = require('url');
+
 
 
 router.post('/company',(req,res,next) => {
@@ -38,7 +40,11 @@ async function asyncForEach(array, callback) {
 }
 
 router.get('/filter',(req,res,next)=>{
-    let search_text = req.body.search_text.toLowerCase();
+    let search_text = "";
+    const queryObject = url.parse(req.url, true).query;
+    if(queryObject.search_text!==undefined){
+        search_text = queryObject.search_text.toLowerCase();
+    }
     Ads.find({}).then(
         (data)=>{
             let filtered_list=[]
